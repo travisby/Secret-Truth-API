@@ -21,11 +21,13 @@ class BaseTest(FlaskTestCase):
 
 
 class TestEndPoints(BaseTest):
+    ENDPOINT = '/secret'
+    SECRET = dict(secret='My Secret')
 
     def test_get(self):
-        response = self.client.get('/secret')
+        response = self.client.get(self.ENDPOINT)
         self.assert200(response)
 
     def test_post(self):
-        response = self.client.post('/secret', data=dict(secret='My Secret'))
+        response = self.client.post(self.ENDPOINT, data=self.SECRET)
         self.assert201(response)
