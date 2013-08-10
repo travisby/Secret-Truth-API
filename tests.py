@@ -30,14 +30,6 @@ class BaseTest(FlaskTestCase):
 
 class TestEndPoints(BaseTest):
 
-    def test_get(self):
-        response = self.client.get(self.ENDPOINT)
-        self.assert200(response)
-
-    def test_post(self):
-        response = self.client.post(self.ENDPOINT, data=self.SECRET)
-        self.assert201(response)
-
     def test_post_queue_adds_item(self):
         self.client.post(self.ENDPOINT, data=self.SECRET)
         self.assertEqual(self.queue.get(), self.SECRET[FORM_FIELD])

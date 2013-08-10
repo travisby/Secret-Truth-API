@@ -21,6 +21,6 @@ def create_app(queue=None):
             return '', 201
 
         elif request.method == 'GET':
-            return jsonify(secret='truth')
+            return jsonify(secret=queue.get())
 
     return app
