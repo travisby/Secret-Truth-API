@@ -21,6 +21,8 @@ def create_app(queue=None):
             return '', 201
 
         elif request.method == 'GET':
-            return jsonify(secret=queue.get()['messages'].pop()['body'])
+            message = queue.get()['messages'].pop()
+            queue.delete(message['id'])
+            return jsonify(secret=message['body'])
 
     return app
