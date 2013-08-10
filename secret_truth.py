@@ -26,6 +26,3 @@ def create_app(queue=None):
             return jsonify(secret=message['body'])
 
     return app
-
-if __name__ == '__main__':
-    create_app().run()
