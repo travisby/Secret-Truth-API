@@ -42,6 +42,11 @@ class TestEndPoints(BaseTest):
                 self.SECRET[FORM_FIELD]
         )
 
+    def test_ensure_item_removed_after_get(self):
+        self.queue.post(self.SECRET[FORM_FIELD])
+        self.client.get(self.ENDPOINT)
+        self.assertTrue(self.queue.empty())
+
 
 class MyQueue(deque):
 
@@ -50,3 +55,6 @@ class MyQueue(deque):
 
     def post(self, item):
         self.append(item)
+
+    def empty(self):
+        return len(self) == 0
