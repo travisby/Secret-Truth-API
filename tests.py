@@ -25,3 +25,7 @@ class TestEndPoints(BaseTest):
     def test_get(self):
         response = self.client.get('/secret')
         self.assert200(response)
+
+    def test_post(self):
+        response = self.client.post('/secret', data=dict(secret='My Secret'))
+        self.assert201(response)
