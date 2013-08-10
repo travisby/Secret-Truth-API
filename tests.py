@@ -77,3 +77,8 @@ class MyQueue(list):
 
     def size(self):
         return len(self)
+
+    def delete(self, delete_id):
+        item = [x for x in self if x['id'] == delete_id].pop()
+        index = self.index(item)
+        del(self[index])
