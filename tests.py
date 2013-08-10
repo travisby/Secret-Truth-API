@@ -1,7 +1,7 @@
 from flask import Flask, json
 from flask.ext.testing import TestCase as FlaskTestCase
 
-from collections import deque
+from uuid import uuid1
 
 from secret_truth import create_app, FORM_FIELD
 
@@ -64,14 +64,13 @@ class TestEndPoints(BaseTest):
         )
 
 
+class MyQueue(list):
 
-class MyQueue(deque):
-
-    def get(self):
-        return self.popleft()
+    def get(self, max_length=1):
+        return {'messages': self[:max_length]}
 
     def post(self, item):
-        self.append(item)
+        self.append({'id': '%s' % uuid1(), 'body': item})
 
     def empty(self):
         return self.size() == 0
