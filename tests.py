@@ -3,7 +3,7 @@ from flask.ext.testing import TestCase as FlaskTestCase
 
 from collections import deque
 
-from secret_truth import create_app
+from secret_truth import create_app, FORM_FIELD
 
 
 class BaseTest(FlaskTestCase):
@@ -40,7 +40,7 @@ class TestEndPoints(BaseTest):
 
     def test_post_queue_adds_item(self):
         self.client.post(self.ENDPOINT, data=self.SECRET)
-        self.assertEqual(self.queue.get(), self.SECRET)
+        self.assertEqual(self.queue.get(), self.SECRET[FORM_FIELD])
 
 
 class MyQueue(deque):

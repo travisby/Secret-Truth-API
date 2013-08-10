@@ -3,6 +3,7 @@ from iron_mq import IronMQ
 
 
 QUEUE_NAME = 'secret'
+FORM_FIELD = 'secret'
 
 
 def create_app(queue=None):
@@ -16,6 +17,7 @@ def create_app(queue=None):
     def get_secret():
 
         if request.method == 'POST':
+            queue.post(request.form[FORM_FIELD])
             return '', 201
 
         elif request.method == 'GET':
