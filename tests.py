@@ -7,7 +7,8 @@ from secret_truth import create_app, FORM_FIELD
 
 
 ENDPOINT = '/secret'
-SECRET = dict(secret='My Secret')
+SECRET1 = dict(secret='My Secret')
+SECRET2 = dict(secret='Bob\'s Secret')
 
 
 class BaseTest(FlaskTestCase):
@@ -33,25 +34,35 @@ class BaseTest(FlaskTestCase):
 class TestEndPoints(BaseTest):
 
     def test_post_queue_adds_item(self):
-        self.client.post(ENDPOINT, data=SECRET)
-        self.assertEqual(self.queue.get(), SECRET[FORM_FIELD])
+        self.client.post(ENDPOINT, data=SECRET1)
+        self.assertEqual(self.queue.get(), SECRET1[FORM_FIELD])
 
     def test_get_queue_returns_added_item(self):
-        self.queue.post(SECRET[FORM_FIELD])
+        self.queue.post(SECRET1[FORM_FIELD])
         resp = self.client.get(ENDPOINT)
         self.assertEqual(
             json.loads(resp.data)[FORM_FIELD],
-            SECRET[FORM_FIELD]
+            SECRET1[FORM_FIELD]
         )
 
     def test_ensure_item_removed_after_get(self):
-        self.queue.post(SECRET[FORM_FIELD])
+        self.queue.post(SECRET1[FORM_FIELD])
         self.client.get(ENDPOINT)
         self.assertTrue(self.queue.empty())
 
     def test_add_item_to_queue_makes_size_1(self):
-        self.client.post(ENDPOINT, data=SECRET)
+        self.client.post(ENDPOINT, data=SECRET1)
         self.assertEqual(self.queue.size(), 1)
+
+    def test_add_two_items_get_first_back(self):
+        self.queue.post(SECRET1[FORM_FIELD])
+        self.queue.post(SECRET2[FORM_FIELD])
+        resp = self.client.get(ENDPOINT)
+        self.assertEqual(
+            json.loads(resp.data)[FORM_FIELD],
+            SECRET1[FORM_FIELD]
+        )
+
 
 
 class MyQueue(deque):
