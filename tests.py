@@ -1,9 +1,16 @@
 from flask import Flask as Flask
 from flask.ext.testing import TestCase as FlaskTestCase
-import secret_truth
+
+from collections import deque
+
+from secret_truth import create_app
 
 
 class BaseTest(FlaskTestCase):
+    ENDPOINT = '/secret'
+    SECRET = dict(secret='My Secret')
+
+    queue = None
 
     def setUp(self):
         pass
@@ -12,7 +19,8 @@ class BaseTest(FlaskTestCase):
         pass
 
     def create_app(self):
-        app = secret_truth.app
+        self.queue = MyQueue()
+        app = create_app(self.queue)
         app.config['TESTING'] = True
         return app
 
@@ -21,8 +29,6 @@ class BaseTest(FlaskTestCase):
 
 
 class TestEndPoints(BaseTest):
-    ENDPOINT = '/secret'
-    SECRET = dict(secret='My Secret')
 
     def test_get(self):
         response = self.client.get(self.ENDPOINT)
@@ -31,3 +37,16 @@ class TestEndPoints(BaseTest):
     def test_post(self):
         response = self.client.post(self.ENDPOINT, data=self.SECRET)
         self.assert201(response)
+
+    def test_post_queue_adds_item(self):
+        self.client.post(self.ENDPOINT, data=self.SECRET)
+        self.assertEqual(self.queue.get(), self.SECRET)
+
+
+class MyQueue(deque):
+
+    def get(self):
+        return self.popleft()
+
+    def post(self, item):
+        self.append(item)
