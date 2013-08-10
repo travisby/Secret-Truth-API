@@ -47,6 +47,10 @@ class TestEndPoints(BaseTest):
         self.client.get(self.ENDPOINT)
         self.assertTrue(self.queue.empty())
 
+    def test_add_item_to_queue_makes_size_1(self):
+        self.client.post(self.ENDPOINT, data=self.SECRET)
+        self.assertEqual(self.queue.size(), 1)
+
 
 class MyQueue(deque):
 
@@ -57,4 +61,7 @@ class MyQueue(deque):
         self.append(item)
 
     def empty(self):
-        return len(self) == 0
+        return self.size() == 0
+
+    def size(self):
+        return len(self)
