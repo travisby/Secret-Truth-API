@@ -16,6 +16,9 @@ class BaseTest(FlaskTestCase):
         app.config['TESTING'] = True
         return app
 
+    def assert201(self, response):
+        self.assertStatus(response, 201)
+
 
 class TestEndPoints(BaseTest):
 
