@@ -1,4 +1,4 @@
-from flask import Flask as Flask
+from flask import Flask, json
 from flask.ext.testing import TestCase as FlaskTestCase
 
 from collections import deque
@@ -41,6 +41,14 @@ class TestEndPoints(BaseTest):
     def test_post_queue_adds_item(self):
         self.client.post(self.ENDPOINT, data=self.SECRET)
         self.assertEqual(self.queue.get(), self.SECRET[FORM_FIELD])
+
+    def test_get_queue_returns_added_item(self):
+        self.queue.post(self.SECRET[FORM_FIELD])
+        resp = self.client.get(self.ENDPOINT)
+        self.assertEqual(
+                json.loads(resp.data)[FORM_FIELD],
+                self.SECRET[FORM_FIELD]
+        )
 
 
 class MyQueue(deque):

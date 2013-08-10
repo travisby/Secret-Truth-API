@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from iron_mq import IronMQ
 
 
@@ -8,7 +8,7 @@ FORM_FIELD = 'secret'
 
 def create_app(queue=None):
 
-    if queue == None:
+    if queue is None:
         queue = IronMQ().queue(QUEUE_NAME)
 
     app = Flask(__name__)
@@ -21,6 +21,6 @@ def create_app(queue=None):
             return '', 201
 
         elif request.method == 'GET':
-            return 'secret truth'
+            return jsonify(secret='truth')
 
     return app
