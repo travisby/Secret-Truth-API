@@ -1,3 +1,8 @@
+"""Secret Truth API Module
+
+Allows the POSTing and GETing of a secret from our queue.
+
+"""
 from flask import Flask, request, jsonify, escape
 from iron_mq import IronMQ
 
@@ -7,6 +12,7 @@ FORM_FIELD = 'secret'
 
 
 def create_app(queue=None):
+    """Returns our Flask app"""
 
     if queue is None:
         queue = IronMQ().queue(QUEUE_NAME)
@@ -15,6 +21,11 @@ def create_app(queue=None):
 
     @app.route('/secret', methods=['GET', 'POST'])
     def get_secret():
+        """GET or POST a secret
+
+        POST: escape, and submit into the queuing service
+        GET: Return the first message from the queue
+        """
 
         if request.method == 'POST':
             queue.post(escape(request.form[FORM_FIELD]))
