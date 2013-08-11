@@ -72,6 +72,13 @@ class TestEndPoints(BaseTest):
         )
 
 
+class TestQueue(BaseTest):
+
+    def test_ironmq_raises(self):
+        app_func = lambda: create_app()
+        self.assertRaises(ValueError, app_func)
+
+
 class MyQueue(list):
 
     def get(self, max_length=1):
