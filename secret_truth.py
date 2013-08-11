@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, escape
 from iron_mq import IronMQ
 
 
@@ -17,7 +17,7 @@ def create_app(queue=None):
     def get_secret():
 
         if request.method == 'POST':
-            queue.post(request.form[FORM_FIELD])
+            queue.post(escape(request.form[FORM_FIELD]))
             return '', 201
 
         elif request.method == 'GET':

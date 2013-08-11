@@ -9,6 +9,7 @@ from secret_truth import create_app, FORM_FIELD
 ENDPOINT = '/secret'
 SECRET1 = dict(secret='My Secret')
 SECRET2 = dict(secret='Bob\'s Secret')
+DIRTY_SECRET = dict(secret="<script>alert('Not-Sanitized!');</script>")
 
 
 class BaseTest(FlaskTestCase):
@@ -61,6 +62,13 @@ class TestEndPoints(BaseTest):
         self.assertEqual(
             json.loads(resp.data)[FORM_FIELD],
             SECRET1[FORM_FIELD]
+        )
+
+    def test_input_gets_sanitized(self):
+        resp = self.client.post(ENDPOINT, data=DIRTY_SECRET)
+        self.assertNotEqual(
+            self.queue.get()['messages'].pop()['body'],
+            DIRTY_SECRET[FORM_FIELD]
         )
 
 
