@@ -36,7 +36,10 @@ class TestEndPoints(BaseTest):
 
     def test_post_queue_adds_item(self):
         self.client.post(ENDPOINT, data=SECRET1)
-        self.assertEqual(self.queue.get()['messages'].pop()['body'], SECRET1[FORM_FIELD])
+        self.assertEqual(
+            self.queue.get()['messages'].pop()['body'],
+            SECRET1[FORM_FIELD]
+        )
 
     def test_get_queue_returns_added_item(self):
         self.queue.post(SECRET1[FORM_FIELD])
